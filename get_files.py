@@ -26,6 +26,8 @@ ncfiles = []
 
 # Iterate over the files in the no2 directory and append them to the list
 for file in glob.glob("/export/data/scratch/tropomi/no2/*.nc"):
-    file_object.write(file + "\n")
+    # Only add datasets taken on May 5, 2020
+    if file[53:61] == "20200505":
+        file_object.write(file + "\n")
 
 file_object.close()
