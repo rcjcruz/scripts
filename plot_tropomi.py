@@ -1,18 +1,26 @@
-# Importing libraries
+### Importing libraries
 import glob
 import netCDF4 as nc 
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 from mpl_toolkits.basemap import Basemap
 import numpy as np 
+import sys
 
 # Remove deprecation warnings
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 
+# #This finds the user's current path so that all hdf4 files can be found
+# try:
+#     # inventory.txt must be in the same directory as plot_tropomi.py
+#     fileList=open('inventory.txt','r')
+# except:
+#     print('Did not find a text file containing file names (perhaps name does not match)')
+#     sys.exit()
 
-# Create an empty list
-ncfiles = []
+# # Create an empty list
+# ncfiles = []
 
 # # Iterate over the files in the no2 directory and append them to the list
 # for file in glob.glob("/export/data/scratch/tropomi/no2/*.nc"):
@@ -20,25 +28,17 @@ ncfiles = []
 
 # my_example_nc_file = ncfiles[1]
 
+# Create a dataset for TROPOMI netCDF4 file
 fh = nc.Dataset('/export/data/scratch/tropomi/no2/S5P_OFFL_L2__NO2____20200505T070610_20200505T084741_13264_01_010302_20200507T000819.nc', mode='r')
-# print (fh)
-
-# # Print groups
-# print(fh.groups)
-
-# # Print the variables
-# print(fh.groups['PRODUCT'].variables.keys())
-
-# # Print information about the data
-# print (fh.groups['PRODUCT'].variables['nitrogendioxide_tropospheric_column'])
-
+grp = 'PRODUCT'
 # Longitude
-lons = fh.groups['PRODUCT'].variables['longitude'][:][0,:,:]
+lons = fh.groups[grp].variables['longitude'][:][0,:,:]
 # Latitude
-lats = fh.groups['PRODUCT'].variables['latitude'][:][0,:,:]
+lats = fh.groups[grp].variables['latitude'][:][0,:,:]
 # NO2 data from nitrogendioxide_tropospheric_column 
-no2 = fh.groups['PRODUCT'].variables[
+no2 = fh.groups[grp].variables[
     'nitrogendioxide_tropospheric_column'][0,:,:]
+map_label='mol/$m^2$'
 
 # # Print shapes of lists
 # print(lons.shape)
@@ -46,7 +46,7 @@ no2 = fh.groups['PRODUCT'].variables[
 # print(no2.shape)
 
 # Units for NO2
-no2_units = fh.groups['PRODUCT'].variables['nitrogendioxide_tropospheric_column'].units
+no2_units = fh.groups[grp].variables['nitrogendioxide_tropospheric_column'].units
 
 # Get some parameters for the Stereographic Projection
 lon_0 = lons.mean()
