@@ -40,12 +40,8 @@ for FILE_NAME in fileList:
         grp='PRODUCT'        
         lat= ds.groups[grp].variables['latitude'][0][:][:]
         lon= ds.groups[grp].variables['longitude'][0][:][:]
-        if 'NO2' in FILE_NAME:
-            sds_name='nitrogendioxide_tropospheric_column'
-            map_label='mol/m2'
-        if 'AER_AI' in FILE_NAME:
-            sds_name='aerosol_index_354_388'
-            map_label='Aerosol Index'
+        sds_name='nitrogendioxide_tropospheric_column'
+        map_label='mol/m2'
         data= ds.groups[grp].variables[sds_name]      
         
         #get necessary attributes 
@@ -60,7 +56,7 @@ for FILE_NAME in fileList:
         # set map labels
        # map_label = data.units
         map_title = data.long_name
-        print(data.units)
+        # print(data.units)
     
         #get the data as an array and mask fill/missing values
         dataArray=np.array(data[0][:][:])
@@ -94,9 +90,6 @@ for FILE_NAME in fileList:
             my_cmap.set_under('w')
             vmin1=0.0
             vmax1=0.05
-            if 'AER_AI' in FILE_NAME:
-                vmin1=-2.0
-                vmax1=0.4
             m.pcolormesh(lon, lat, data, latlon=True, vmin=vmin1, vmax=np.nanmax(data)*vmax1,cmap=my_cmap)
             cb = m.colorbar()
             cb.set_label(map_label)
